@@ -1,22 +1,25 @@
 package br.com.alura.threads.manipulandoArray;
 
-import br.com.alura.threads.banheiro.TarefaNumero2;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class Principal {
 
     public static void main(String[] args) {
-        Lista lista = new Lista();
+        List<String> lista = new ArrayList<>();
 
-        for(int i=0;i<100;i++){
-            new Thread(new TarefaAdicionaElemento(lista)).start();
+        for(int i=0;i<10;i++){
+            new Thread(new TarefaAdicionaElemento(lista,i)).start();
         }
 
-        for(int i=0;i<1000;i++){
-            System.out.println("lista[" + i + "] = " + lista.lista[i]);
+        for(int i=0;i<lista.size();i++){
+            System.out.println("lista[" + i + "] = " + lista.get(i));
         }
-
+//      output:
+//        lista[992] = Thread 9 - 96
+//        lista[993] = Thread 9 - 97
+//        lista[994] = Thread 9 - 98
+//        lista[995] = Thread 9 - 99
+//        deveria ir até o index 999, mas arrayList não é thread-safe
     }
 }
