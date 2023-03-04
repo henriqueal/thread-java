@@ -5,29 +5,44 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class Banheiro {
 
-    //private Lock lock = new ReentrantLock();
-    // podemos utilizar essa classe ReentrantLock para fazermos o lock manual. Porém temos a desvantagem
-    // de ter que lembrar de dar o unlock no final.
+    boolean ehSujo = true;
 
     public void fazNumero1(){
 
         String nome = Thread.currentThread().getName();
         System.out.println(nome + " Batendo na porta");
-        //lock.lock();
+
         synchronized (this){
             System.out.println(nome + " Entrando no banheiro");
-            System.out.println(nome + " Fazendo coisa rápida");
-            try {
-                Thread.sleep(10000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+
+            while(ehSujo){
+                esperaLaFora(nome);
             }
+
+            System.out.println(nome + " Fazendo coisa rápida");
+            dormirUmPouco(5000);
+            this.ehSujo = true;
             System.out.println(nome + " Dando descarga");
             System.out.println(nome + " Lavando a mão");
             System.out.println(nome + " Saindo do banheiro");
-
         }
-        //lock.unlock();
+    }
+
+    private void dormirUmPouco(long millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void esperaLaFora(String nome) {
+        System.out.println(nome + ": eca, o banheiro está uma sujeira");
+        try {
+            this.wait();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public void fazNumero2(){
@@ -35,15 +50,41 @@ public class Banheiro {
         System.out.println(nome + " Batendo na porta");
         synchronized (this){
             System.out.println(nome + " Entrando no banheiro");
-            System.out.println(nome + " Fazendo coisa demorada");
-            try {
-                Thread.sleep(10000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            while(ehSujo){
+                esperaLaFora(nome);
             }
+            System.out.println(nome + " Fazendo coisa demorada");
+            dormirUmPouco(7000);
+            this.ehSujo = true;
             System.out.println(nome + " Dando descarga");
             System.out.println(nome + " Lavando a mão");
             System.out.println(nome + " Saindo do banheiro");
+
+        }
+    }
+
+    public  void limpaBanheiro(){
+        String nome = Thread.currentThread().getName();
+
+        System.out.println(nome + " batendo na porta");
+
+        synchronized (this) {
+
+            System.out.println(nome + " entrando no banheiro");
+
+            if (!this.ehSujo) {
+                System.out.println(nome + ", não está sujo, vou sair");
+                return;
+            }
+
+            System.out.println(nome + " limpando o banheiro");
+            this.ehSujo = false;
+
+            dormirUmPouco(13000);
+
+            this.notifyAll();
+
+            System.out.println(nome + " saindo do banheiro");
         }
     }
 
