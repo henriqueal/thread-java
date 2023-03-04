@@ -10,19 +10,13 @@ public class Principal {
         Thread convidado1 = new Thread(new TarefaNumero1(banheiro), "Joao");
         Thread convidado2 = new Thread(new TarefaNumero2(banheiro), "Pedro");
         Thread servicoLimpeza = new Thread(new TarefaLimparBanheiro(banheiro), "Faxina");
-        servicoLimpeza.setDaemon(true);
+        servicoLimpeza.setDaemon(true); //se todas as threads principais tiverem morrido, então ela tbm morre.
         servicoLimpeza.setPriority(Thread.MAX_PRIORITY);
-        //Thread convidado3 = new Thread(new TarefaNumero2(banheiro), "Ana");
-        //Thread convidado4 = new Thread(new TarefaNumero1(banheiro), "Maria");
 
 
         convidado1.start();
         convidado2.start();
         servicoLimpeza.start();
-        //convidado3.start();
-        //convidado4.start();
-
-
-
+        
     }
 }
