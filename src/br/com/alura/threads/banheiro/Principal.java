@@ -16,7 +16,9 @@ public class Principal {
 
         convidado1.start();
         convidado2.start();
+        System.out.println("Teste print na main");
         servicoLimpeza.start();
-        
+
+
     }
 }

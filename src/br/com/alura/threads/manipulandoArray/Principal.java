@@ -6,14 +6,16 @@ import java.util.Vector;
 public class Principal {
 
     public static void main(String[] args) {
-        List<String> lista = new Vector<>();
+        Lista lista = new Lista();
 
         for(int i=0;i<10;i++){
             new Thread(new TarefaAdicionaElemento(lista,i)).start();
         }
 
-        for(int i=0;i<lista.size();i++){
-            System.out.println("lista[" + i + "] = " + lista.get(i));
-        }
+        TarefaExibeLista tarefaExibeLista = new TarefaExibeLista(lista);
+        Thread exibe = new Thread(tarefaExibeLista);
+        exibe.start();
+
+
     }
 }
